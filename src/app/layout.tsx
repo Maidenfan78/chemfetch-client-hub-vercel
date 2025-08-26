@@ -29,11 +29,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${inter.className} font-sans antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="flex min-h-screen bg-chemfetch-bg-secondary text-chemfetch-text-primary">
             <Sidebar />
             <div className="flex flex-col flex-1">
               <TopNav />
+              {/* Testing Phase Banner */}
+              <div className="bg-yellow-500/90 dark:bg-yellow-600/90 text-black dark:text-yellow-100 px-6 py-2 text-center text-sm font-medium">
+                ⚠️ Testing Phase: This application is currently under development. Some features may be limited or experimental.
+              </div>
               <main className="p-6 flex-1">{children}</main>
             </div>
           </div>

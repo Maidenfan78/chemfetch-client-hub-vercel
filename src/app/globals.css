@@ -77,12 +77,12 @@
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
 
-  /* ChemFetch Light Theme Colors */
+  /* ChemFetch Light Theme Colors - Softer, Less Bright */
   --chemfetch-text-primary: 31, 41, 55; /* #1f2937 */
   --chemfetch-text-secondary: 107, 114, 128; /* #6b7280 */
-  --chemfetch-bg-primary: 255, 255, 255; /* #ffffff */
-  --chemfetch-bg-secondary: 248, 250, 252; /* #f8fafc */
-  --chemfetch-border: 229, 231, 235; /* #e5e7eb */
+  --chemfetch-bg-primary: 249, 250, 251; /* #f9fafb - softer than pure white */
+  --chemfetch-bg-secondary: 243, 244, 246; /* #f3f4f6 - more muted background */
+  --chemfetch-border: 209, 213, 219; /* #d1d5db - slightly more visible borders */
 }
 
 .dark {

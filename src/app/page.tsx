@@ -22,6 +22,9 @@ export default async function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold mb-2">Welcome to ChemFetch Client Hub</h1>
             <p className="text-blue-100 text-lg">Chemical Safety Management Dashboard</p>
+            <div className="mt-2 inline-block bg-yellow-400/20 text-yellow-100 px-3 py-1 rounded-lg text-sm font-medium">
+              ⚠️ Testing Phase - Features may be limited
+            </div>
           </div>
         </div>
         <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
