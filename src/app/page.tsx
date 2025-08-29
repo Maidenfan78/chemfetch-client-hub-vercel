@@ -1,17 +1,76 @@
-import { redirect } from 'next/navigation';
-import { supabaseServer } from '@/lib/supabase-server';
-import { BarChart3, Users, FileText, TrendingUp } from 'lucide-react';
+'use client';
+
+import { BarChart3, FileText, AlertTriangle, Package } from 'lucide-react';
 import Link from 'next/link';
+import { useDashboardStats } from '@/lib/hooks/useDashboardStats';
+import { useEffect, useState } from 'react';
+import { supabaseBrowser } from '@/lib/supabase-browser';
+import { User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 
-export default async function DashboardPage() {
-  const supabase = await supabaseServer();
+export default function DashboardPage() {
+  const { stats, loading, error } = useDashboardStats();
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const router = useRouter();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    const supabase = supabaseBrowser();
 
+    // Get initial user
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      setAuthLoading(false);
+
+      // Redirect to login if no user
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+    };
+    getUser();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+
+      // Redirect to login if signed out
+      if (!session?.user) {
+        router.push('/login');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+
+  // Show loading spinner while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading if redirecting to login
   if (!user) {
-    redirect('/login');
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Redirecting to login...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -103,13 +162,29 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick Stats */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="flex items-center gap-2 text-red-800">
+            <AlertTriangle size={20} />
+            <span className="font-medium">Error loading statistics</span>
+          </div>
+          <p className="text-red-700 text-sm mt-1">{error}</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900 dark:text-gray-100">Total Chemicals</h3>
             <BarChart3 size={24} className="text-chemfetch-primary" />
           </div>
-          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">0</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            {loading ? (
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-600 h-8 w-16 rounded"></div>
+            ) : (
+              stats.totalChemicals
+            )}
+          </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Registered in your system</p>
         </div>
 
@@ -118,26 +193,46 @@ export default async function DashboardPage() {
             <h3 className="font-semibold text-gray-900 dark:text-gray-100">SDS Documents</h3>
             <FileText size={24} className="text-chemfetch-accent" />
           </div>
-          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">0</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            {loading ? (
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-600 h-8 w-16 rounded"></div>
+            ) : (
+              stats.sdsDocuments
+            )}
+          </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Safety data sheets available</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Scan Time</h3>
-            <TrendingUp size={24} className="text-green-500" />
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Hazardous Substances</h3>
+            <AlertTriangle size={24} className="text-red-500" />
           </div>
-          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">~2-5s</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Average processing time</p>
+          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            {loading ? (
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-600 h-8 w-16 rounded"></div>
+            ) : (
+              stats.hazardousSubstances
+            )}
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Chemicals requiring special handling
+          </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">OCR Accuracy</h3>
-            <Users size={24} className="text-purple-500" />
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Dangerous Goods</h3>
+            <Package size={24} className="text-orange-500" />
           </div>
-          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">95%+</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Text recognition accuracy</p>
+          <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            {loading ? (
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-600 h-8 w-16 rounded"></div>
+            ) : (
+              stats.dangerousGoods
+            )}
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Transport regulated substances</p>
         </div>
       </div>
 
