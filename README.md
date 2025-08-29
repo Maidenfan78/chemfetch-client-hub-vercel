@@ -2,6 +2,8 @@
 
 **Next.js web dashboard** for businesses to manage chemical registers, Safety Data Sheets (SDS), and regulatory compliance. Part of the ChemFetch chemical management platform.
 
+**Integrates seamlessly with ChemFetch mobile app** (currently in Android closed testing) - all mobile scans appear automatically in this dashboard.
+
 This client-facing application provides a comprehensive interface for chemical safety officers, facility managers, and compliance teams to oversee their organization's chemical inventory and safety documentation.
 
 ---
@@ -12,6 +14,7 @@ This client-facing application provides a comprehensive interface for chemical s
 
 - **📦 Inventory Tracking**: View and manage chemical products across multiple locations
 - **📄 SDS Integration**: Access Safety Data Sheets with parsed metadata display
+- **📱 Mobile App Sync**: Real-time data from ChemFetch mobile app (Android closed testing)
 - **⚠️ Hazard Assessment**: Risk classifications, dangerous goods information, and safety ratings
 - **📊 Compliance Reporting**: Export data for regulatory submissions and audits
 - **🏢 Multi-location Support**: Organize chemicals by site, department, or storage area

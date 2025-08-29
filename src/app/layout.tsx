@@ -36,7 +36,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <TopNav />
               {/* Testing Phase Banner */}
               <div className="bg-yellow-500/90 dark:bg-yellow-600/90 text-black dark:text-yellow-100 px-6 py-2 text-center text-sm font-medium">
-                ⚠️ Testing Phase: This application is currently under development. Some features may be limited or experimental.
+                ⚠️ Testing Phase: This application is currently under development. Some features may
+                be limited or experimental.
               </div>
               <main className="p-6 flex-1">{children}</main>
             </div>

@@ -165,7 +165,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-3 border border-chemfetch-border rounded-xl bg-gray-100 dark:bg-chemfetch-bg-secondary text-chemfetch-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-chemfetch-primary focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-chemfetch-border rounded-xl bg-black-100 dark:bg-chemfetch-bg-secondary text-chemfetch-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-chemfetch-primary focus:border-transparent"
                   />
                 </div>
               </div>
@@ -184,7 +184,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-10 py-3 border border-chemfetch-border rounded-xl bg-gray-100 dark:bg-chemfetch-bg-secondary text-chemfetch-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-chemfetch-primary focus:border-transparent"
+                    className="block w-full pl-10 pr-10 py-3 border border-chemfetch-border rounded-xl bg-black-100 dark:bg-chemfetch-bg-secondary text-chemfetch-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-chemfetch-primary focus:border-transparent"
                   />
                   <button
                     type="button"
