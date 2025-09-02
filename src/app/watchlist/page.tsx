@@ -500,6 +500,7 @@ export default function WatchListPage() {
                   Manufacturer {getSortIcon('manufacturer')}
                 </th>
                 <th className="p-2 border text-left">Item Description</th>
+                <th className="p-2 border text-left">Size/Contents</th>
                 <th
                   className="p-2 border text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                   onClick={() => handleSort('quantity')}
@@ -624,8 +625,10 @@ export default function WatchListPage() {
 
                     <td className="p-2 border">{meta?.vendor ?? product.manufacturer ?? '—'}</td>
 
+                    <td className="p-2 border">{entry.description ?? meta?.description ?? '—'}</td>
+
                     <td className="p-2 border">
-                      {product.contents_size_weight ?? entry.description ?? '—'}
+                      {product.contents_size_weight ?? '—'}
                     </td>
 
                     <td className="p-2 border text-center">
