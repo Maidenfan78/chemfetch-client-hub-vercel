@@ -1,5 +1,6 @@
 // src/app/api/debug-sds-parse/route.ts
 import { NextResponse } from 'next/server';
+import { fetchJsonWithWake } from '@/lib/http';
 
 export async function POST(request: Request) {
   try {
@@ -17,43 +18,39 @@ export async function POST(request: Request) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), 300_000); // 5 minutes
 
-    // Make the request to the backend with debug flag
-    const resp = await fetch(`${backendUrl}/parse-sds`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        product_id: parseInt(product_id),
-        sds_url: sds_url,
-        force: force || true,
-        debug: true, // Add debug flag if backend supports it
-      }),
-      signal: controller.signal,
-    }).catch(e => {
+    const { ok, status, json, text } = await fetchJsonWithWake(
+      `${backendUrl}/parse-sds`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: parseInt(product_id),
+          sds_url: sds_url,
+          force: force || true,
+          debug: true,
+        }),
+        signal: controller.signal,
+      },
+      `${backendUrl}/health`
+    ).catch(e => {
       throw new Error(e?.name === 'AbortError' ? 'Parse timed out' : String(e));
     });
 
     clearTimeout(id);
 
-    const text = await resp.text();
-    let data: unknown;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = { raw_response: text, parse_error: 'Failed to parse JSON response' };
-    }
-    const responseData = data as Record<string, unknown>;
+    const responseData = (json ?? { raw_response: text }) as Record<string, unknown>;
 
     // Always return the full response for debugging, even if backend returned an error
     const debugResponse: Record<string, unknown> = {
-      success: resp.ok,
-      status_code: resp.status,
+      success: ok,
+      status_code: status,
       backend_url: `${backendUrl}/parse-sds`,
       request_payload: { product_id: parseInt(product_id), sds_url, force, debug: true },
       response_data: responseData,
       timestamp: new Date().toISOString(),
     };
 
-    if (!resp.ok) {
+    if (!ok) {
       const parsed = responseData as {
         error?: string;
         raw_response?: string;

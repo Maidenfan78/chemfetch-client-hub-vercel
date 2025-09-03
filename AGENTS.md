@@ -1,18 +1,21 @@
 # ChemFetch Client Hub - Agent Instructions
 
 ## Project Overview
-Next.js 15 web dashboard for chemical safety officers and facility managers. 
+
+Next.js 15 web dashboard for chemical safety officers and facility managers.
 Provides chemical register management, SDS viewing, compliance reporting, and administrative tools.
 
-## Setup Commands  
+## Setup Commands
+
 - Install dependencies: `npm install`
 - Start development: `npm run dev` (runs on http://localhost:3000)
-- Build for production: `npm run build`  
+- Build for production: `npm run build`
 - Start production: `npm start`
 - Deploy to Vercel: `npm run deploy`
 - Type checking: `npm run type-check`
 
 ## Technology Stack
+
 - **Framework**: Next.js 15 with App Router
 - **React**: React 19 with modern patterns
 - **TypeScript**: Strict mode with comprehensive typing
@@ -21,13 +24,14 @@ Provides chemical register management, SDS viewing, compliance reporting, and ad
 - **Database**: Supabase with generated TypeScript types
 - **Authentication**: Supabase Auth with SSR support
 
-## Project Structure  
+## Project Structure
+
 ```
 src/
 ├── app/                 # Next.js App Router pages
 │   ├── layout.tsx      # Root layout with providers
 │   ├── page.tsx        # Home dashboard page
-│   ├── auth/           # Authentication pages  
+│   ├── auth/           # Authentication pages
 │   ├── dashboard/      # Main application pages
 │   └── api/            # API routes (if any)
 ├── components/         # Reusable UI components
@@ -43,6 +47,7 @@ src/
 ```
 
 ## Next.js App Router Patterns
+
 - **Server Components**: Use by default for better performance
 - **Client Components**: Use `'use client'` only when needed for interactivity
 - **Layouts**: Shared layouts with proper loading states
@@ -51,6 +56,7 @@ src/
 - **Loading States**: Create loading.tsx files for async operations
 
 ## Supabase Integration
+
 - **Client Types**: Use generated database types from `database.types.ts`
 - **SSR Auth**: Properly configured Server-Side Rendering with auth
 - **Real-time**: Use Supabase subscriptions for live updates
@@ -58,6 +64,7 @@ src/
 - **Error Handling**: Graceful handling of database errors
 
 ## Component Architecture
+
 - **Composition Pattern**: Build complex UIs from simple, reusable components
 - **Prop Types**: Use TypeScript interfaces for all component props
 - **Server/Client Boundary**: Clear separation of server and client components
@@ -65,6 +72,7 @@ src/
 - **Form Handling**: Controlled components with validation
 
 ## UI/UX Standards
+
 - **Design System**: Consistent use of shadcn/ui components
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
@@ -73,6 +81,7 @@ src/
 - **Error States**: User-friendly error messages and recovery options
 
 ## Chemical Register Features
+
 - **Product Management**: CRUD operations for chemical inventory
 - **SDS Integration**: Display and manage Safety Data Sheets
 - **Inline Editing**: Edit quantities and locations directly in tables
@@ -81,6 +90,7 @@ src/
 - **Bulk Operations**: Handle multiple products simultaneously
 
 ## Data Flow Patterns
+
 - **Server Actions**: Use Next.js Server Actions for form submissions
 - **Client State**: React hooks for UI state management
 - **Database Sync**: Real-time updates with Supabase subscriptions
@@ -88,6 +98,7 @@ src/
 - **Error Recovery**: Graceful handling of network and database errors
 
 ## Styling Guidelines
+
 - **Tailwind CSS**: Use utility-first CSS with custom configurations
 - **Component Variants**: Use class-variance-authority for component variants
 - **Consistent Spacing**: Follow design system spacing scale
@@ -96,6 +107,7 @@ src/
 - **Animations**: Subtle animations for better UX
 
 ## Performance Optimization
+
 - **Static Generation**: Use SSG where possible for better performance
 - **Code Splitting**: Automatic code splitting with Next.js
 - **Image Optimization**: Use Next.js Image component for assets
@@ -103,6 +115,7 @@ src/
 - **Caching**: Proper caching strategies for API calls and static assets
 
 ## Authentication Flow
+
 - **Protected Routes**: Middleware-based route protection
 - **Session Management**: SSR-compatible session handling
 - **User Context**: Provide user data throughout the application
@@ -110,6 +123,7 @@ src/
 - **Role-Based Access**: Different permissions for different user types
 
 ## Testing Strategy
+
 - **Component Testing**: Test UI components in isolation
 - **Integration Testing**: Test data flow and user interactions
 - **Accessibility Testing**: Ensure WCAG compliance
@@ -117,6 +131,7 @@ src/
 - **Manual Testing**: Cross-browser and device testing
 
 ## Development Workflow
+
 1. **Design System**: Use shadcn/ui components as base
 2. **TypeScript**: Write type-safe code with proper interfaces
 3. **Database**: Update types after schema changes
@@ -125,6 +140,7 @@ src/
 6. **Testing**: Test components and user flows
 
 ## Environment Configuration
+
 - **Development**: `.env.local` for local development
 - **Production**: `.env.production` for production builds
 - **Supabase**: Database URL, anon key, service role key
@@ -132,6 +148,7 @@ src/
 - **Vercel**: Deployment configuration via `vercel.json`
 
 ## Common Development Tasks
+
 - **Add New Page**: Create in `src/app/` with proper layout
 - **Create Component**: Add to `src/components/` with TypeScript props
 - **Database Integration**: Use Supabase client with generated types
@@ -140,6 +157,7 @@ src/
 - **Add Route Protection**: Use middleware for authentication checks
 
 ## Production Deployment
+
 - **Vercel Integration**: Automatic deployments from Git
 - **Environment Variables**: Properly configured for production
 - **Performance Monitoring**: Monitor Core Web Vitals and user experience

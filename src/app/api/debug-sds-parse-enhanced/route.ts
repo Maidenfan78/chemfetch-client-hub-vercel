@@ -1,5 +1,6 @@
 // src/app/api/debug-sds-parse-enhanced/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { fetchJsonWithWake } from '@/lib/http';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,30 +14,31 @@ export async function POST(request: NextRequest) {
     // Get backend URL from environment
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
 
-    // Call the enhanced parser endpoint
-    const response = await fetch(`${backendUrl}/parse-sds-enhanced`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const { ok, status, json, text } = await fetchJsonWithWake(
+      `${backendUrl}/parse-sds-enhanced`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: parseInt(product_id),
+          sds_url,
+          force,
+          use_direct_parser,
+        }),
       },
-      body: JSON.stringify({
-        product_id: parseInt(product_id),
-        sds_url,
-        force,
-        use_direct_parser,
-      }),
-    });
+      `${backendUrl}/health`
+    );
 
-    const result = await response.json();
+    const result = json ?? { raw_response: text };
 
-    if (!response.ok) {
+    if (!ok) {
       return NextResponse.json(
         {
-          error: result.error || result.message || 'Enhanced parser failed',
-          backend_status: response.status,
+          error: (result as any).error || (result as any).message || 'Enhanced parser failed',
+          backend_status: status,
           backend_response: result,
         },
-        { status: response.status }
+        { status }
       );
     }
 

@@ -1,5 +1,6 @@
 // src/app/api/update-sds/route.ts
 import { NextResponse } from 'next/server';
+import { fetchJsonWithWake } from '@/lib/http';
 
 export async function POST(request: Request) {
   try {
@@ -12,34 +13,31 @@ export async function POST(request: Request) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), 300_000); // 5 minutes
 
-    const resp = await fetch(`${backendUrl}/parse-sds`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // Backend expects { product_id, sds_url, force }
-      body: JSON.stringify({
-        product_id: parseInt(productId),
-        sds_url: pdfUrl,
-        force: false,
-      }),
-      signal: controller.signal,
-    }).catch(e => {
+    const { ok, status, json, text } = await fetchJsonWithWake(
+      `${backendUrl}/parse-sds`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Backend expects { product_id, sds_url, force }
+        body: JSON.stringify({
+          product_id: parseInt(productId),
+          sds_url: pdfUrl,
+          force: false,
+        }),
+        signal: controller.signal,
+      },
+      `${backendUrl}/health`
+    ).catch(e => {
       throw new Error(e?.name === 'AbortError' ? 'Parse timed out' : String(e));
     });
     clearTimeout(id);
 
-    const text = await resp.text();
-    let data: unknown;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = { raw: text };
-    }
-    const parsedData = data as Record<string, unknown>;
+    const parsedData = (json ?? { raw: text }) as Record<string, unknown>;
 
-    if (!resp.ok) {
+    if (!ok) {
       const errorMessage =
         (parsedData.error as string) || (parsedData.raw as string) || 'Failed to trigger parse';
-      return NextResponse.json({ error: errorMessage }, { status: resp.status });
+      return NextResponse.json({ error: errorMessage }, { status });
     }
 
     // bubble up parsed fields so the UI can refresh row(s)

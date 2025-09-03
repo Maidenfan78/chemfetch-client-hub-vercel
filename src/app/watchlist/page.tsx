@@ -627,9 +627,7 @@ export default function WatchListPage() {
 
                     <td className="p-2 border">{entry.description ?? meta?.description ?? '—'}</td>
 
-                    <td className="p-2 border">
-                      {product.contents_size_weight ?? '—'}
-                    </td>
+                    <td className="p-2 border">{product.contents_size_weight ?? '—'}</td>
 
                     <td className="p-2 border text-center">
                       {renderEditableCell(entry.id, 'quantity_on_hand', entry.quantity_on_hand)}
